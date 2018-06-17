@@ -48,6 +48,12 @@ pub struct TypedGraphMap<Id: IdType, NL: Hash + Eq, EL: Hash + Eq, Ty: GraphType
     node_label_map: SetMap<NL>,
     /// A map of edge labels.
     edge_label_map: SetMap<EL>,
+    /// Node label frequencies
+    node_label_freq: Vec<usize>,
+    // index 0 stands for None
+    /// Edge label frequencies
+    edge_label_freq: Vec<usize>,
+    // index 0 stands for None
     /// A marker of thr graph type, namely, directed or undirected.
     graph_type: PhantomData<Ty>,
 }
@@ -60,6 +66,8 @@ impl<Id: IdType, NL: Hash + Eq, EL: Hash + Eq, Ty: GraphType> TypedGraphMap<Id, 
             edge_map: HashMap::<(Id, Id), Edge<Id>>::new(),
             node_label_map: SetMap::<NL>::new(),
             edge_label_map: SetMap::<EL>::new(),
+            node_label_freq: Vec::<usize>::new(),
+            edge_label_freq: Vec::<usize>::new(),
             graph_type: PhantomData,
         }
     }
@@ -75,6 +83,8 @@ impl<Id: IdType, NL: Hash + Eq, EL: Hash + Eq, Ty: GraphType> TypedGraphMap<Id, 
             edge_map: HashMap::<(Id, Id), Edge<Id>>::with_capacity(edge),
             node_label_map: SetMap::<NL>::with_capacity(node_labels),
             edge_label_map: SetMap::<EL>::with_capacity(edge_labels),
+            node_label_freq: Vec::<usize>::with_capacity(node_labels),
+            edge_label_freq: Vec::<usize>::with_capacity(edge_labels),
             graph_type: PhantomData,
         }
     }
@@ -111,6 +121,8 @@ impl<Id: IdType, NL: Hash + Eq, EL: Hash + Eq, Ty: GraphType> TypedGraphMap<Id, 
             edge_map: HashMap::<(Id, Id), Edge<Id>>::new(),
             node_label_map,
             edge_label_map,
+            node_label_freq: vec![0usize; node_label_map.len() + 1],
+            edge_label_freq: vec![0usize; edge_label_map.len() + 1],
             graph_type: PhantomData,
         }
     }
